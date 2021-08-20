@@ -4,7 +4,7 @@
 --
 -- receive ASCII escape sequence
 --    ESC (0x1b) followed by 1-4 uppercase printable characters 0x40-0x5F
---    Output as 24 bits of binary data
+--    Output as 18 bits of binary data
 --
 
 library ieee;
@@ -38,25 +38,27 @@ architecture arch of top_basys3_test is
       clk       : in  std_logic);
   end component uart_new;
 
-  signal rst_n : std_logic;
-  signal ser_dat : std_logic_vector(7 downto 0);
+  signal rst_n     : std_logic;
+  signal ser_dat   : std_logic_vector(7 downto 0);
   signal ser_valid : std_logic;
 
-  type param_array_t is array (3 downto 0) of std_logic_vector(4 downto 0);
+  type param_array_t is array (3 downto 0) of std_logic_vector(5 downto 0);
 
   signal param_array : param_array_t;
 
   signal param_ptr : integer range 0 to 3 := 0;
 
-  signal count : std_logic_vector(31 downto 0);
+  signal d_out : std_logic_vector(15 downto 0);
+  signal k_out : std_logic_vector(1 downto 0);
 
+  signal store : std_logic;
 
 begin  -- architecture arch
 
   rst_n <= not btnD;                    -- reset on "down" button
-  RsTx <= RsRx;                         -- direct echo
+  RsTx  <= RsRx;                        -- direct echo
 
-  uart_new_1: entity work.uart_new
+  uart_new_1 : entity work.uart_new
     port map (
       rst       => btnD,
       RsRx      => RsRx,
@@ -69,40 +71,40 @@ begin  -- architecture arch
     if rst_n = '0' then                 -- asynchronous reset (active low)
 
       param_ptr <= 0;
+      store     <= '0';
 
     elsif clk'event and clk = '1' then  -- rising clock edge
 
-      count <= std_logic_vector( unsigned(count) + 1);
---      led(15) <= '1';
---      led(14) <= count(22);
+      store <= '0';
+
+      if store = '1' then
+        led <= d_out;
+      end if;
 
       if ser_valid = '1' then
 
-        led(7 downto 0) <= ser_dat(7 downto 0);
-
         -- process incoming characters
-        if ser_dat(6 downto 0) = x"1b" then -- ESC starts a new sequence
+        if ser_dat(6 downto 0) = "0011011" then  -- ESC starts a new sequence
 
           param_ptr <= 0;
 
-        elsif ser_dat(6 downto 5) = "10" then -- printable character 40-5F
+        elsif ser_dat(6) = '1' then     -- printable character 40-7F
 
-          param_array( param_ptr) <= ser_dat(4 downto 0);
-          param_ptr <= param_ptr + 1;
+          param_array(param_ptr) <= ser_dat(5 downto 0);
 
---          led(13 downto 7) <= ser_dat(6 downto 0);
-
+          if param_ptr = 2 then
+            store     <= '1';
+            param_ptr <= 0;
+          else
+            param_ptr <= param_ptr + 1;
+          end if;
         end if;
 
       end if;
     end if;
   end process;
 
-  led(12 downto 8) <= param_array(0);
-  led(14 downto 13) <= std_logic_vector(to_unsigned(param_ptr, 2));
-
---  led(4 downto 0) <= param_array(0);
---  led(9 downto 5) <= param_array(1);
---  led(14 downto 10) <= param_array(2);
+  d_out <= param_array(2)(3 downto 0) & param_array(1) & param_array(0);
+  k_out <= param_array(2)(5 downto 4);
 
 end architecture arch;
