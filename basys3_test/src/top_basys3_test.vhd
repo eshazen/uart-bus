@@ -9,7 +9,7 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
+use ieee.numeric_std.all;
 
 entity top_basys3_test is
 
@@ -73,12 +73,12 @@ begin  -- architecture arch
     elsif clk'event and clk = '1' then  -- rising clock edge
 
       count <= std_logic_vector( unsigned(count) + 1);
-      led(15) <= '1';
-      led(14) <= count(22);
+--      led(15) <= '1';
+--      led(14) <= count(22);
 
       if ser_valid = '1' then
 
-        led(6 downto 0) <= ser_dat(6 downto 0);
+        led(7 downto 0) <= ser_dat(7 downto 0);
 
         -- process incoming characters
         if ser_dat(6 downto 0) = x"1b" then -- ESC starts a new sequence
@@ -90,13 +90,16 @@ begin  -- architecture arch
           param_array( param_ptr) <= ser_dat(4 downto 0);
           param_ptr <= param_ptr + 1;
 
-          led(13 downto 7) <= ser_dat(6 downto 0);
+--          led(13 downto 7) <= ser_dat(6 downto 0);
 
         end if;
 
       end if;
     end if;
   end process;
+
+  led(12 downto 8) <= param_array(0);
+  led(14 downto 13) <= std_logic_vector(to_unsigned(param_ptr, 2));
 
 --  led(4 downto 0) <= param_array(0);
 --  led(9 downto 5) <= param_array(1);
