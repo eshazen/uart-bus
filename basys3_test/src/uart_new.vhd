@@ -37,7 +37,7 @@ architecture arch of uart_new is
   signal ser_sr      : std_logic_vector(9 downto 0);  -- serial shift register
   signal ser_busy    : std_logic;       -- '1' while shifting in a word
   signal valid_out   : std_logic;       -- serial valid out next clock
-  signal frameErr      : std_logic;       -- valid start and stop bits
+--  signal frameErr    : std_logic;       -- valid start and stop bits
   signal rx_last     : std_logic;
 
   -- counts from 0 to 15 for 16X oversampling
@@ -66,7 +66,7 @@ begin  -- architecture arch
       baud_sample <= '0';
       ser_busy    <= '0';
       valid_out   <= '0';
-      frameErr      <= '0';
+--      frameErr    <= '0';
       ser_sr      <= (others => '0');
 
     elsif clk'event and clk = '1' then  -- 100MHz rising clock edge
@@ -113,7 +113,7 @@ begin  -- architecture arch
           if bitCtr = 10 then           -- counted 10 bits (start+8+stop)
             ser_busy  <= '0';
             ser_dat   <= ser_sr(8 downto 1);  -- copy SR to output (skip start bit)
-            frameErr    <= ser_sr(9) = 1 and ser_sr(0) = 0;
+--            frameErr  <= ser_sr(9) = '1' and ser_sr(0) = '0';
             valid_out <= '1';
           end if;
 
