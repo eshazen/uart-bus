@@ -48,11 +48,13 @@ architecture arch of top_basys3_test is
 
   signal param_ptr : integer range 0 to 3 := 0;
 
+  signal count : std_logic_vector(31 downto 0);
+
 
 begin  -- architecture arch
 
   rst_n <= not btnD;                    -- reset on "down" button
-  RsTx <= RsRx;
+  RsTx <= RsRx;                         -- direct echo
 
   uart_new_1: entity work.uart_new
     port map (
@@ -69,9 +71,14 @@ begin  -- architecture arch
       param_ptr <= 0;
 
     elsif clk'event and clk = '1' then  -- rising clock edge
+
+      count <= std_logic_vector( unsigned(count) + 1);
+      led(15) <= '1';
+      led(14) <= count(22);
+
       if ser_valid = '1' then
 
---        led(6 downto 0) <= ser_dat(6 downto 0);
+        led(6 downto 0) <= ser_dat(6 downto 0);
 
         -- process incoming characters
         if ser_dat(6 downto 0) = x"1b" then -- ESC starts a new sequence
@@ -83,7 +90,7 @@ begin  -- architecture arch
           param_array( param_ptr) <= ser_dat(4 downto 0);
           param_ptr <= param_ptr + 1;
 
---          led(13 downto 7) <= ser_dat(6 downto 0);
+          led(13 downto 7) <= ser_dat(6 downto 0);
 
         end if;
 
@@ -91,8 +98,8 @@ begin  -- architecture arch
     end if;
   end process;
 
-  led(4 downto 0) <= param_array(0);
-  led(9 downto 5) <= param_array(1);
-  led(14 downto 10) <= param_array(2);
+--  led(4 downto 0) <= param_array(0);
+--  led(9 downto 5) <= param_array(1);
+--  led(14 downto 10) <= param_array(2);
 
 end architecture arch;
