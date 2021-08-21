@@ -38,6 +38,18 @@ architecture arch of top_basys3_test is
       clk       : in  std_logic);
   end component uart_new;
 
+  component uart_tx is
+    generic (
+      g_CLKS_PER_BIT : integer);
+    port (
+      i_Clk       : in  std_logic;
+      i_TX_DV     : in  std_logic;
+      i_TX_Byte   : in  std_logic_vector(7 downto 0);
+      o_TX_Active : out std_logic;
+      o_TX_Serial : out std_logic;
+      o_TX_Done   : out std_logic);
+  end component uart_tx;
+
   signal rst_n     : std_logic;
   signal ser_dat   : std_logic_vector(7 downto 0);
   signal ser_valid : std_logic;
@@ -53,10 +65,13 @@ architecture arch of top_basys3_test is
 
   signal store : std_logic;
 
+  signal send_data : std_logic_vector(7 downto 0);
+  signal send_ena  : std_logic;
+
 begin  -- architecture arch
 
   rst_n <= not btnD;                    -- reset on "down" button
-  RsTx  <= RsRx;                        -- direct echo
+--  RsTx  <= RsRx;                        -- direct echo
 
   uart_new_1 : entity work.uart_new
     port map (
@@ -66,16 +81,30 @@ begin  -- architecture arch
       ser_valid => ser_valid,
       clk       => clk);
 
+  UART_TX_1 : entity work.uart_tx
+    generic map (
+      g_CLKS_PER_BIT => (100000000/9600))
+    port map (
+      i_Clk       => clk,
+      i_TX_DV     => send_ena,
+      i_TX_Byte   => send_data,
+      o_TX_Active => open,
+      o_TX_Serial => RsTx,
+      o_TX_Done   => open);
+
   process (clk, rst_n) is
   begin  -- process
     if rst_n = '0' then                 -- asynchronous reset (active low)
 
       param_ptr <= 0;
       store     <= '0';
+      send_ena  <= '0';
+      send_data <= (others => '0');
 
     elsif clk'event and clk = '1' then  -- rising clock edge
 
       store <= '0';
+      send_ena <= '0';
 
       if store = '1' then
         led <= d_out;
@@ -89,6 +118,9 @@ begin  -- architecture arch
           param_ptr <= 0;
 
         elsif ser_dat(6) = '1' then     -- printable character 40-7F
+
+          send_data <= ser_dat;
+          send_ena <= '1';
 
           param_array(param_ptr) <= ser_dat(5 downto 0);
 
@@ -106,5 +138,8 @@ begin  -- architecture arch
 
   d_out <= param_array(2)(3 downto 0) & param_array(1) & param_array(0);
   k_out <= param_array(2)(5 downto 4);
+
+
+
 
 end architecture arch;

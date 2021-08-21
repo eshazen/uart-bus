@@ -1,2 +1,3 @@
 basys3_test/src/top_basys3_test.vhd
 basys3_test/src/uart_new.vhd
+basys3_test/src/uart_tx.vhd
