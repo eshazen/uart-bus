@@ -1,10 +1,12 @@
 # uart-bus
 
-This is a simple UART interface for firmware control.
+This is a simple UART interface for firmware control.  Each transaction consists of a query followed by a response.
+The queries are always 4 bytes as described below.  The response is either a single ASCII ACK (0x06) or NAK (0x15)
+or a 4-byte sequence beginning with ESC.
 
-Protocol:
+Query: ESC b0 b1 b2
 
-ESC b0 b1 b2
+This is a 4-character message which encodes 18 bits, 16 bits of data and a 2 bit function code
 
 Where:
 
@@ -23,6 +25,7 @@ Control bits are decoded as follows:
 k1 k0  function
  0  0  read from address specified in bits 0-15
  0  1  write to address specified in bits 0-15
- 1  0  
- 1  1
- 
+ 1  0  write data
+ 1  1  response
+```
+
