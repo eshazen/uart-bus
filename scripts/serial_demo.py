@@ -21,11 +21,11 @@ def sendBin(ser,val):
 
 # connect to the Arduino via the serial port
 # change the serial port name as required (to i.e. 'COM6' if on windows)
-ser = serial.Serial( '/dev/ttyUSB0', 9600)
+ser = serial.Serial( '/dev/ttyUSB1', 9600)
 
-for i in range(15):
+for i in range(16):
     b = 1<<i
-    sendBin( ser, b)
+    sendBin( ser, i)
     time.sleep( 0.1)
 
 print( "Done")
