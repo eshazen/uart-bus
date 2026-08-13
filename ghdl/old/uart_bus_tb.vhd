@@ -18,7 +18,9 @@ architecture Behavioral of uart_bus_tb is
 
   -- simulation clock period
   constant clock_freq : integer := 50000000; --50MHz system clock
-  constant clock_period : time    := 1/clock_freq * 1 ns;
+-- this doesn't work in ghdl
+--  constant clock_period : time    := 1/clock_freq * 1 ns;
+  constant clock_period : time    := 20 ns;
   signal stop_the_clock : boolean := false;
   -- serial clock divider for this simulation
 

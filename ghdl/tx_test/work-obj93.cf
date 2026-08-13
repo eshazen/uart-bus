@@ -1,0 +1,7 @@
+v 4
+file . "uart_tx_tb.vhd" "441786349ab094782717a016b2b71d2fc29951ea" "20260812132709.982":
+  entity uart_tx_tb at 3( 2) + 0 on 13;
+  architecture arch of uart_tx_tb at 12( 128) + 0 on 14;
+file . "uart_tx.vhd" "a47a7215a1033a45e17d3ecb079a1534a1978d78" "20260812132709.975":
+  entity uart_tx at 14( 610) + 0 on 11;
+  architecture rtl of uart_tx at 33( 1033) + 0 on 12;

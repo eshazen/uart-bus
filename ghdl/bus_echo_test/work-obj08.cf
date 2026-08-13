@@ -1,0 +1,22 @@
+v 4
+file . "tb.vhd" "61396f4fa0922af062aa12c725c2effc943dc362" "20260813173137.846":
+  entity tb at 1( 0) + 0 on 23;
+  architecture arch of tb at 9( 102) + 0 on 24;
+file . "uart_bus_tx.vhd" "c4640e859820409ed89852548d12e98c4447d0ee" "20260813173137.838":
+  entity uart_bus_tx at 13( 355) + 0 on 19;
+  architecture arch of uart_bus_tx at 38( 917) + 0 on 20;
+file . "uart_rx.vhd" "43e859d06f895004256f0a2090b0fefd4002a654" "20260813173137.826":
+  entity uart_rx at 6( 58) + 0 on 15;
+  architecture arch of uart_rx at 27( 657) + 0 on 16;
+file . "uart_tb_pkg.vhd" "3e8d0173904c0026f2443ac419576b7641bf13b2" "20260813173137.815":
+  package uart_tb_pkg at 3( 2) + 0 on 11 body;
+  package body uart_tb_pkg at 25( 509) + 0 on 12;
+file . "uart_tx.vhd" "80d72ba2e9ae71afe0b2986148af49687cd2f26b" "20260813173137.821":
+  entity uart_tx at 14( 610) + 0 on 13;
+  architecture rtl of uart_tx at 33( 1033) + 0 on 14;
+file . "uart_bus_rx.vhd" "26464622f4e30f285877d5aeb794fedae7320d6d" "20260813173137.832":
+  entity uart_bus_rx at 13( 357) + 0 on 17;
+  architecture arch of uart_bus_rx at 37( 886) + 0 on 18;
+file . "uart_bus.vhd" "f75f79402bafd95bdc3c9009fe0ee2380025bbba" "20260813173137.842":
+  entity uart_bus at 1( 0) + 0 on 21;
+  architecture arch of uart_bus at 24( 817) + 0 on 22;

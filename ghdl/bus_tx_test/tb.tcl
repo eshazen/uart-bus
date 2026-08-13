@@ -1,0 +1,14 @@
+#
+gtkwave::addSignalsFromList [list {tb.clk}]
+gtkwave::addSignalsFromList [list {tb.uart_ser_tx}]
+gtkwave::addSignalsFromList [list {tb.msg_valid}]
+gtkwave::addSignalsFromList [list {tb.msg_done}]
+gtkwave::addSignalsFromList [list {tb.msg_data}]
+gtkwave::addSignalsFromList [list {tb.msg_func}]
+gtkwave::addSignalsFromList [list {tb.uart_bus_1.tx_active}]
+gtkwave::addSignalsFromList [list {tb.uart_bus_1.tx_done}]
+gtkwave::addSignalsFromList [list {tb.uart_bus_1.state}]
+gtkwave::addSignalsFromList [list {tb.uart_bus_1.ser_dat}]
+
+gtkwave::/Time/Zoom/Zoom_Full
+
