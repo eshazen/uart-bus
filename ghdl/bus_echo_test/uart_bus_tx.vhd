@@ -1,5 +1,4 @@
---
--- initial simple version of bus transmitter
+-- uart_bus_tx.vhd   send a 4-byte packet in uart_bus format
 --
 -- send message to client:
 --   $abc

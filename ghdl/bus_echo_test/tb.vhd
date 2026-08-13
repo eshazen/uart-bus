@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use work.uart_tb_pkg.all;
 
 entity tb is
-  
+
 end entity tb;
 
 architecture arch of tb is
@@ -21,15 +21,15 @@ architecture arch of tb is
       msg_rx_valid : out std_logic;
       msg_tx_data  : in  std_logic_vector(15 downto 0));
   end component uart_bus;
-  
+
   -- simulation clock period
---  constant clock_freq : integer := 96000000; -- 96MHz system clock
-  constant clock_freq   : integer := 16000000;  -- 16MHz system clock
+  constant clock_freq : integer := 96000000; -- 96MHz system clock
+  --constant clock_freq   : integer := 16000000;  -- 16MHz system clock
   constant clock_period : time    := 1 sec / clock_freq;
 
   -- baud rate should be 100k
-  constant baud_rate : integer := 100000;
-  constant bit_time  : time    := 1 ns / baud_rate;
+  --constant baud_rate : integer := 100000;
+  constant baud_rate : integer := 115200;
 
   signal clk          : std_logic;
   signal rst          : std_logic;
@@ -38,7 +38,7 @@ architecture arch of tb is
   signal msg_rx_data  : std_logic_vector(15 downto 0);
   signal msg_rx_func  : std_logic_vector(1 downto 0);
   signal msg_rx_valid : std_logic;
-  signal msg_tx_data  : std_logic_vector(15 downto 0);
+  signal msg_tx_data  : std_logic_vector(15 downto 0) := X"00FF";
   signal msg_tx_func  : std_logic_vector(1 downto 0);
 
 begin  -- architecture arch
@@ -55,39 +55,52 @@ begin  -- architecture arch
   stimulus : process
   begin
 
-    rst       <= '1';
+    rst         <= '1';
+    uart_ser_rx <= '1';
+
     wait for 1 us;
     rst <= '0';
     wait for 50 us;
 
-    -- Send several bytes at baud_rate baud.
-    uart_send(uart_ser_rx, x"99", baud_rate);
-    wait for 50 us;
-    uart_send(uart_ser_rx, x"24", baud_rate);
-    wait for 50 us;
-    uart_send(uart_ser_rx, x"00", baud_rate);
-    wait for 50 us;
-    uart_send(uart_ser_rx, x"00", baud_rate);
-    wait for 50 us;
-    uart_send(uart_ser_rx, x"00", baud_rate);
-    wait for 50 us;
-    wait for 50 us;
-    uart_send(uart_ser_rx, x"24", baud_rate);
-    wait for 50 us;
-    uart_send(uart_ser_rx, x"AA", baud_rate);
-    wait for 50 us;
-    uart_send(uart_ser_rx, x"BB", baud_rate);
-    wait for 50 us;
-    uart_send(uart_ser_rx, x"CC", baud_rate);
+
+--    uart_send(uart_ser_rx, x"99", baud_rate);
+--    wait for 50 us;
+
+--    -- Send several bytes at baud_rate baud.
+--    uart_send(uart_ser_rx, x"99", baud_rate);
+--    wait for 50 us;
+--    uart_send(uart_ser_rx, x"24", baud_rate);
+--    wait for 50 us;
+--    uart_send(uart_ser_rx, x"00", baud_rate);
+--    wait for 50 us;
+--    uart_send(uart_ser_rx, x"00", baud_rate);
+--    wait for 50 us;
+--    uart_send(uart_ser_rx, x"00", baud_rate);
+--    wait for 150 us;
+
+    msg_send(uart_ser_rx, X"1234", "01", baud_rate);
+
+    wait for 150 us;
+
+    msg_send(uart_ser_rx, X"dead", "00", baud_rate);
+
+--    wait for 50 us;
+--    uart_send(uart_ser_rx, x"24", baud_rate);
+--    wait for 50 us;
+--    uart_send(uart_ser_rx, x"AA", baud_rate);
+--    wait for 50 us;
+--    uart_send(uart_ser_rx, x"BB", baud_rate);
+--    wait for 50 us;
+--    uart_send(uart_ser_rx, x"CC", baud_rate);
 
     -- End simulation
     wait;
 
   end process;
 
-  uart_bus_1: entity work.uart_bus
+  uart_bus_1 : entity work.uart_bus
     generic map (
-      BAUD_16_DIV => 10)
+      BAUD_16_DIV => 52)
     port map (
       clk          => clk,
       rst          => rst,

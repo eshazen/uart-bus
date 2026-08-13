@@ -1,5 +1,4 @@
---
--- initial simple version of bus receiver
+-- uart_bus_rx.vhd   receive 4-byte packet in uart_bus format
 --
 -- expects message from client:
 --   $abc
