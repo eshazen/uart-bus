@@ -8,13 +8,12 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
 
-entity uart_new is
+entity uart_rx is
 
   generic (
-    SYSTEM_CLK_HZ : integer := 100e6;   -- system clock in Hz
-    OVER_SAMPLE   : integer := 16;      -- over-sampling factor
-    BAUD_RATE     : integer := 9600);   -- desired baud rate
-
+    g_BAUD_DIV : integer := 115     -- Needs to be set correctly
+                                    -- (can be 1 for simulation)
+    );
   port (
     rst       : in  std_logic;          -- active high asynchronous reset
     RsRx      : in  std_logic;          -- serial input data
@@ -22,13 +21,14 @@ entity uart_new is
     ser_valid : out std_logic;          -- serial data valid
     clk       : in  std_logic);         -- 100 MHz clock
 
-end entity uart_new;
+end entity uart_rx;
 
 
-architecture arch of uart_new is
+architecture arch of uart_rx is
 
   -- calculate oversampling clock divider value
-  constant BaudDiv : integer := SYSTEM_CLK_HZ/(OVER_SAMPLE*BAUD_RATE);
+  constant BaudDiv : integer := g_BAUD_DIV;
+  constant OVER_SAMPLE   : integer := 16;      -- over-sampling factor
 
   signal rst_n : std_logic;
 
@@ -113,7 +113,6 @@ begin  -- architecture arch
           if bitCtr = 10 then           -- counted 10 bits (start+8+stop)
             ser_busy  <= '0';
             ser_dat   <= ser_sr(8 downto 1);  -- copy SR to output (skip start bit)
---            frameErr  <= ser_sr(9) = '1' and ser_sr(0) = '0';
             valid_out <= '1';
           end if;
 

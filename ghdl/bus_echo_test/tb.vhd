@@ -28,7 +28,7 @@ architecture arch of tb is
   constant clock_period : time    := 1 sec / clock_freq;
 
   -- baud rate should be 100k
-  --constant baud_rate : integer := 100000;
+  -- constant baud_rate : integer := 100000;
   constant baud_rate : integer := 115200;
 
   signal clk          : std_logic;
